@@ -1,0 +1,109 @@
+<?php
+    include($_SERVER["DOCUMENT_ROOT"] . "/NANO/login/src/php/loginChk.php");
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>NANO</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@300&display=swap" rel="stylesheet">
+    <link href="./src/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="modalTitle" class="modal-title">Modal title</h5>
+                    <button type="button" class="btn-close" onclick="$('.modal').hide();" aria-label="Close"></button>
+                </div>
+                <div style="width: 100%;display: flex;" id="modalInner" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="$('.modal').hide();">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-lg" style="width: 100%;height: 100%;">
+        <div id="mainRow" class="row align-items-center">
+            <div id="mainCol" class="col d-flex justify-content-start text-center">
+                <div id="main-card" class="card">
+                    <button type="button" id="logOutBtn" class="btn btn-primary" onclick="logOut()"><b>X</b></button>
+                    <div class="card-body" style="margin-bottom: 25px;">
+                        <div id="addLectureDiv">
+                            <div class="input-group mb-3">
+                                <input id="lecturenameinput" type="text" class="form-control"
+                                    placeholder="Lecture name">
+                                <span class="input-group-text">&</span>
+                                <input id="lecturenuminput" type="text" class="form-control"
+                                    placeholder="Lecture number">
+                                <button type="button" class="btn btn-outline-success"
+                                    onclick="AddLecture();">Add</button>
+                            </div>
+                        </div>
+                        <div>
+                            <ul id="lecturelist" class="list-group">
+                                <?php
+                                    include_once($_SERVER["DOCUMENT_ROOT"] . "/NANO/src/php/sqlLib.php");
+                                    include_once($_SERVER["DOCUMENT_ROOT"] . "/NANO/src/php/normalLib.php");
+
+                                    if (!isset($_SESSION)) {
+                                        session_start();
+                                    }
+
+                                    $userName = $_SESSION["nn_username"];
+                                    $userKey = $_SESSION["nn_userkey"];
+
+                                    $userLectureJson = AESDecrypt(GetUserLectureJson($userName), $userKey);
+                                    $userLectureJson = json_decode($userLectureJson, true);
+
+                                    foreach ($userLectureJson as $key => $value) {
+                                        $key = PreventXSS($key);
+                                        $value = PreventXSS($value);
+                                        
+                                        echo "
+                                            <li class='disabledrag list-group-item list-group-item-action d-flex justify-content-between align-items-center' style='cursor: pointer;' data-id='$value' ondblclick='ClickLecture(event);'>$key
+                                                <div id='moreinfo'>
+                                                    <span class='badge bg-primary rounded-pill'>Lecture ID: $value</span>
+                                                    <span class='badge bg-primary rounded-pill' style='cursor: pointer;' onclick='DeleteLecture(\"$key\")'>X</span>
+                                                </div>
+                                            </li>
+                                            ";
+                                    }
+                                ?>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <span>Since 2022. Made by SeMin.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+        integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+        integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+        crossorigin="anonymous"></script>
+    <script src="./src/js/Lecture.js"></script>
+    <script>
+        (function (_0x41f459, _0x2f688d) {var _0xcbb856 = _0xdaee, _0x3ef6cf = _0x41f459(); while (!![]) {try {var _0x1d6996 = -parseInt(_0xcbb856(0x1f7)) / 0x1 * (-parseInt(_0xcbb856(0x1ea)) / 0x2) + parseInt(_0xcbb856(0x1f4)) / 0x3 + parseInt(_0xcbb856(0x1e6)) / 0x4 * (-parseInt(_0xcbb856(0x1f0)) / 0x5) + parseInt(_0xcbb856(0x1e8)) / 0x6 + parseInt(_0xcbb856(0x1f5)) / 0x7 * (-parseInt(_0xcbb856(0x1e2)) / 0x8) + -parseInt(_0xcbb856(0x1e4)) / 0x9 + parseInt(_0xcbb856(0x1f2)) / 0xa * (parseInt(_0xcbb856(0x1fc)) / 0xb); if (_0x1d6996 === _0x2f688d) break; else _0x3ef6cf['push'](_0x3ef6cf['shift']());} catch (_0x573a29) {_0x3ef6cf['push'](_0x3ef6cf['shift']());} } }(_0x34f0, 0x1c54f)); var _0x1a3b05 = (function () {var _0x32e4bd = !![]; return function (_0x299dce, _0x2f32b7) {var _0x4c7fea = _0x32e4bd ? function () {var _0x5b0360 = _0xdaee; if (_0x2f32b7) {var _0x228897 = _0x2f32b7[_0x5b0360(0x1f6)](_0x299dce, arguments); return _0x2f32b7 = null, _0x228897;} } : function () {}; return _0x32e4bd = ![], _0x4c7fea;};}()), _0x3fe116 = _0x1a3b05(this, function () {var _0xd5c31d = _0xdaee; return _0x3fe116['toString']()[_0xd5c31d(0x1f9)](_0xd5c31d(0x1fd))['toString']()[_0xd5c31d(0x1ed)](_0x3fe116)[_0xd5c31d(0x1f9)](_0xd5c31d(0x1fd));}); _0x3fe116(); var _0x1e60c5 = (function () {var _0xc1a4da = !![]; return function (_0x13961b, _0x845f8e) {var _0x35fef1 = _0xc1a4da ? function () {var _0x12dffc = _0xdaee; if (_0x845f8e) {var _0x4d9979 = _0x845f8e[_0x12dffc(0x1f6)](_0x13961b, arguments); return _0x845f8e = null, _0x4d9979;} } : function () {}; return _0xc1a4da = ![], _0x35fef1;};}()), _0x376c13 = _0x1e60c5(this, function () {var _0x3acdde = _0xdaee, _0xd7807; try {var _0x4c11a3 = Function(_0x3acdde(0x1e0) + _0x3acdde(0x1e5) + ');'); _0xd7807 = _0x4c11a3();} catch (_0x32d772) {_0xd7807 = window;} var _0x1e3deb = _0xd7807[_0x3acdde(0x1ec)] = _0xd7807[_0x3acdde(0x1ec)] || {}, _0x59193f = [_0x3acdde(0x1e7), 'warn', _0x3acdde(0x1ef), _0x3acdde(0x1f8), _0x3acdde(0x1eb), _0x3acdde(0x1f1), _0x3acdde(0x1e1)]; for (var _0x1c7f8e = 0x0; _0x1c7f8e < _0x59193f[_0x3acdde(0x1fb)]; _0x1c7f8e++) {var _0x1ee959 = _0x1e60c5[_0x3acdde(0x1ed)][_0x3acdde(0x1e9)]['bind'](_0x1e60c5), _0x5c7fad = _0x59193f[_0x1c7f8e], _0x118d5a = _0x1e3deb[_0x5c7fad] || _0x1ee959; _0x1ee959[_0x3acdde(0x1f3)] = _0x1e60c5[_0x3acdde(0x1e3)](_0x1e60c5), _0x1ee959['toString'] = _0x118d5a[_0x3acdde(0x1df)][_0x3acdde(0x1e3)](_0x118d5a), _0x1e3deb[_0x5c7fad] = _0x1ee959;} }); _0x376c13(); function _0xdaee(_0x29baad, _0x4d4c07) {var _0xbb8c87 = _0x34f0(); return _0xdaee = function (_0x376c13, _0x1e60c5) {_0x376c13 = _0x376c13 - 0x1df; var _0x10813c = _0xbb8c87[_0x376c13]; return _0x10813c;}, _0xdaee(_0x29baad, _0x4d4c07);} function _0x34f0() {var _0x42573d = ['__proto__', '538782eZuxDl', '301IqAfRr', 'apply', '3CwpsXH', 'error', 'search', 'href', 'length', '170819wOjlnZ', '(((.+)+)+)+$', 'toString', 'return\x20(function()\x20', 'trace', '20408ykFgcU', 'bind', '929529SAMEnk', '{}.constructor(\x22return\x20this\x22)(\x20)', '124cHgqCy', 'log', '78552ivSidW', 'prototype', '38382tQAVKy', 'exception', 'console', 'constructor', '/NANO/login/src/php/logOut.php', 'info', '37390pbugcC', 'table', '200SWswkm']; _0x34f0 = function () {return _0x42573d;}; return _0x34f0();} function logOut() {var _0x44e9bf = _0xdaee; location[_0x44e9bf(0x1fa)] = _0x44e9bf(0x1ee);}
+    </script>
+</body>
